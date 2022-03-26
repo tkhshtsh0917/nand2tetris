@@ -10,30 +10,26 @@
 // R0 >= 0, R1 >= 0, and R0*R1 < 32768.
 
 // Put your code here.
-
-    // initialize
-    @counter
+(INIT)
+    @cnt
     M=0
     @R2
     M=0
 
 (LOOP)
-    // GOTO END if counter - R1 >= 0
-    @counter
+    @cnt
     D=M
     @R1
     D=D-M
     @END
     D;JGE
 
-    // R2 += R0
     @R0
     D=M
     @R2
     M=D+M
 
-    // counter += 1
-    @counter
+    @cnt
     M=M+1
 
     @LOOP

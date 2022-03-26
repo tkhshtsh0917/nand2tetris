@@ -12,81 +12,60 @@
 // the screen should remain fully clear as long as no key is pressed.
 
 // Put your code here.
-
-// initialize
-@keypress
-M=0
-@fill
-M=0
+(INIT)
+    @8192
+    D=A
+    @SCREEN
+    D=D+A
+    @end
+    M=D
 
 (LOOP)
-    // read key pressed
-    @KBD
-    D=M
-
-    // set keypress state
-    @SET_KEYPRESS_FILL
-    D;JGT
-
-    // unset keypress
-    @keypress
-    M=0
-
-    @SET_KEYPRESS_END
-    0;JMP
-
-(SET_KEYPRESS_FILL)
-    @R0
-    D=!A
-    @keypress
-    M=D
-
-(SET_KEYPRESS_END)
-    // jump to LOOP if fill - keypress == 0
-    @fill
-    D=M
-    @keypress
-    D=D-M
-    @LOOP
-    D;JEQ
-
-    // fill = keypress
-    @keypress
-    D=M
-    @fill
-    M=D
-
-    // fill screen
-    // i = 0
-    @i
-    M=0
-
-    // i += 16384(0x4000)
     @SCREEN
     D=A
-    @i
-    M=D+M
-
-(SCREEN_LOOP)
-    // fill screen
-    @fill
-    D=M
-    @i
-    A=M
+    @address
     M=D
 
-    // i += 1
-    @i
-    M=M+1
+    @KBD
     D=M
 
-    // jump to SCREEN_LOOP if 24576 (0x6000) - i >= 0
-    @KBD
-    D=D-A
+(DISPATCH)
+    @BLACK
+    D;JNE
 
-    @SCREEN_LOOP
-    D;JLT
+    @WHITE
+    0;JMP
 
-    // infinite loop
+(BLACK)
+    @color
+    M=-1
+
+    @DRAW
+    0;JMP
+
+(WHITE)
+    @color
+    M=0
+
+    @DRAW
+    0;JMP
+
+(DRAW)
+    @color
+    D=M
+
+    @address
+    A=M
+    M=D
+    D=A+1
+    @address
+    M=D
+
+    @end
+    D=M-D
+
+    @DRAW
+    D;JGT
+
     @LOOP
     0;JMP
